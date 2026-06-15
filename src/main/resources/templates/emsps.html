@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('eMSP')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="mb-4">e-Mobility Service Providers</h1>
+
+    <div class="card mb-4">
+        <div class="card-header">New eMSP</div>
+        <div class="card-body">
+            <form th:action="@{/ui/emsps}" method="post" class="row g-2 align-items-end">
+                <div class="col-md-10">
+                    <label class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" required/>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th class="text-end">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="emsp : ${emsps}">
+            <td th:text="${emsp.id()}">id</td>
+            <td th:text="${emsp.name()}">name</td>
+            <td class="text-end">
+                <a th:href="@{'/ui/emsps/' + ${emsp.id()} + '/edit'}"
+                   class="btn btn-sm btn-outline-secondary">Edit</a>
+                <form th:action="@{'/ui/emsps/' + ${emsp.id()} + '/delete'}" method="post"
+                      class="d-inline"
+                      onsubmit="return confirm('Delete this eMSP?');">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${emsps.isEmpty()}">
+            <td colspan="3" class="text-center text-muted">No eMSP yet</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

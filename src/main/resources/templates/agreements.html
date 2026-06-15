@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Agreements')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="mb-4">Agreements</h1>
+
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>CPO</th>
+            <th>eMSP</th>
+            <th>Tariff</th>
+            <th>Status</th>
+            <th>Created at</th>
+            <th>Accepted at</th>
+            <th class="text-end">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${agreements}">
+            <td th:text="${a.id()}">id</td>
+            <td th:text="${a.cpoId()}">cpo</td>
+            <td th:text="${a.emspId()}">emsp</td>
+            <td th:text="${a.tariff().type()} + ' · ' + ${a.tariff().pricePerKwh()} + ' €/kWh'">tariff</td>
+            <td>
+                <span class="badge"
+                      th:classappend="${a.status() == 'ACCEPTED'} ? 'text-bg-success' : (${a.status() == 'PROPOSED'} ? 'text-bg-warning' : 'text-bg-secondary')"
+                      th:text="${a.status()}">status</span>
+            </td>
+            <td th:text="${a.createdAt()}">createdAt</td>
+            <td th:text="${a.acceptedAt()}">acceptedAt</td>
+            <td class="text-end text-nowrap">
+                <form th:if="${a.status() == 'PROPOSED'}"
+                      th:action="@{'/ui/agreements/' + ${a.id()} + '/accept'}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-success">Accept</button>
+                </form>
+                <form th:if="${a.status() == 'PROPOSED'}"
+                      th:action="@{'/ui/agreements/' + ${a.id()} + '/reject'}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+                </form>
+                <form th:if="${a.status() == 'PROPOSED' or a.status() == 'ACCEPTED'}"
+                      th:action="@{'/ui/agreements/' + ${a.id()} + '/cancel'}" method="post" class="d-inline"
+                      onsubmit="return confirm('Cancel this agreement?');">
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                </form>
+                <span th:if="${a.status() == 'REJECTED' or a.status() == 'CANCELLED'}"
+                      class="text-muted">—</span>
+            </td>
+        </tr>
+        <tr th:if="${agreements.isEmpty()}">
+            <td colspan="8" class="text-center text-muted">No agreement yet</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="mb-4">Dashboard</h1>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card text-bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">CPO</h5>
+                    <p class="display-6 mb-0" th:text="${cpoCount}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">eMSP</h5>
+                    <p class="display-6 mb-0" th:text="${emspCount}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-bg-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Agreements</h5>
+                    <p class="display-6 mb-0" th:text="${agreementCount}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Proposed</h5>
+                    <p class="display-6 mb-0" th:text="${proposedCount}">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Accepted</h5>
+                    <p class="display-6 mb-0" th:text="${acceptedCount}">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

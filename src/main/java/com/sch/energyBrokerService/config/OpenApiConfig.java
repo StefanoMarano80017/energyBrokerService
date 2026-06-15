@@ -13,7 +13,7 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Energy Broker Service API")
-                        .version("1.0")
-                        .description("Gestione fornitori e tariffe energetiche"));
+                        .version("2.0")
+                        .description("Gestione di accordi commerciali (tariffe) tra CPO ed eMSP"));
     }
 }

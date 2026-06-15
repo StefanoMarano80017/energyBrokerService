@@ -1,5 +1,4 @@
 package com.sch.energyBrokerService.domain.model.tariff;
-
 import java.util.UUID;
 
 public record TariffId(UUID value) {

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Edit CPO')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="mb-4">Edit CPO</h1>
+
+    <form th:action="@{'/ui/cpos/' + ${cpo.id()} + '/update'}" method="post" class="col-md-6">
+        <div class="mb-3">
+            <label class="form-label">Id</label>
+            <input type="text" class="form-control" th:value="${cpo.id()}" disabled/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" th:value="${cpo.name()}" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Latitude</label>
+            <input type="number" step="any" name="latitude" class="form-control"
+                   th:value="${cpo.latitude()}" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Longitude</label>
+            <input type="number" step="any" name="longitude" class="form-control"
+                   th:value="${cpo.longitude()}" required/>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/ui/cpos" class="btn btn-link">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

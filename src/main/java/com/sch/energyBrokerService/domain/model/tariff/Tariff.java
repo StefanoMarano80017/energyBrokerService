@@ -1,52 +1,45 @@
 package com.sch.energyBrokerService.domain.model.tariff;
 
-import com.sch.energyBrokerService.domain.model.geo.Coordinate;
-import com.sch.energyBrokerService.domain.model.geo.GeoArea;
-import com.sch.energyBrokerService.domain.model.supplier.SupplierId;
-
+/**
+ * Definizione economica di una tariffa.
+ *
+ * <p>Non è più legata a un fornitore o a una copertura geografica: è un value object
+ * indipendente che vive all'interno dell'aggregato {@code Agreement}.
+ */
 public class Tariff {
 
     private final TariffId id;
-    private final SupplierId supplierId;
     private final TariffType type;
     private final PricePerKwh pricePerKwh;
-    private final GeoArea geoArea;
 
     public Tariff(
-            TariffId id,
-            SupplierId supplierId,
-            TariffType type,
-            PricePerKwh pricePerKwh,
-            GeoArea geoArea
+        TariffId id,
+        TariffType type,
+        PricePerKwh pricePerKwh
     ) {
+        if (id == null) {
+            throw new IllegalArgumentException("TariffId is required");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("TariffType is required");
+        }
+        if (pricePerKwh == null) {
+            throw new IllegalArgumentException("PricePerKwh is required");
+        }
         this.id = id;
-        this.supplierId = supplierId;
         this.type = type;
         this.pricePerKwh = pricePerKwh;
-        this.geoArea = geoArea;
-    }
-
-    public boolean isApplicable(Coordinate coordinate, TimeWindow requestTime) {
-        return geoArea.contains(coordinate);
     }
 
     public TariffId id() {
         return id;
     }
 
-    public SupplierId supplierId() {
-        return supplierId;
+    public TariffType type() {
+        return type;
     }
 
     public PricePerKwh pricePerKwh() {
         return pricePerKwh;
-    }
-
-    public TariffType type() {
-        return type;
-    }
-    
-    public GeoArea geoArea() {
-        return geoArea;
     }
 }
