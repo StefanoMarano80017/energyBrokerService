@@ -26,7 +26,7 @@ public class DashboardPageController {
     @GetMapping({"/", "/ui"})
     public String dashboard(Model model) {
         model.addAttribute("cpoCount", cpoQueryHandler.findAll().size());
-        model.addAttribute("emspCount", emspQueryHandler.search(null).size());
+        model.addAttribute("emspCount", emspQueryHandler.search(null, null).size());
         model.addAttribute("agreementCount",
                 agreementQueryHandler.search(null, null, null).size());
         model.addAttribute("proposedCount",

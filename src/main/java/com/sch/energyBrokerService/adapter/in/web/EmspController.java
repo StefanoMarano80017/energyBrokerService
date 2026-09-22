@@ -27,16 +27,16 @@ public class EmspController {
     private final EmspCommandHandler commandHandler;
     private final EmspQueryHandler queryHandler;
 
-    @Operation(summary = "Crea un nuovo eMSP")
+    @Operation(summary = "Crea un nuovo eMSP, opzionalmente con l'identificativo del sistema esterno")
     @PostMapping
     public EmspResponse create(@Valid @RequestBody CreateEmspRequest request) {
         return EmspPersistenceMapper.toResponse(commandHandler.create(request));
     }
 
-    @Operation(summary = "Elenca gli eMSP, con filtro opzionale sul nome")
+    @Operation(summary = "Elenca gli eMSP, con filtro opzionale sul nome e sull'identificativo esterno")
     @GetMapping
     public List<EmspResponse> search(@ModelAttribute EmspSearchQuery query) {
-        return queryHandler.search(query.getName()).stream()
+        return queryHandler.search(query.getName(), query.getExternalId()).stream()
                 .map(EmspPersistenceMapper::toResponse)
                 .toList();
     }

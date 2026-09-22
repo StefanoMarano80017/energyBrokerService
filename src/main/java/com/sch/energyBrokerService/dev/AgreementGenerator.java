@@ -56,7 +56,7 @@ public class AgreementGenerator {
         }
 
         List<Cpo> cpos = cpoQueryHandler.findAll();
-        List<Emsp> emsps = emspQueryHandler.search(null);
+        List<Emsp> emsps = emspQueryHandler.search(null, null);
         if (cpos.isEmpty() || emsps.isEmpty()) {
             log.warn("Impossibile generare accordi: CPO o eMSP mancanti");
             return 0;

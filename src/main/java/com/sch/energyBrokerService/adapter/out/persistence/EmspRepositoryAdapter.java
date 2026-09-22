@@ -32,6 +32,11 @@ public class EmspRepositoryAdapter implements EmspRepository {
     }
 
     @Override
+    public Optional<Emsp> findByExternalId(String externalId) {
+        return jpaRepo.findByExternalId(externalId).map(EmspPersistenceMapper::toDomain);
+    }
+
+    @Override
     public List<Emsp> findAll() {
         return jpaRepo.findAll().stream().map(EmspPersistenceMapper::toDomain).toList();
     }

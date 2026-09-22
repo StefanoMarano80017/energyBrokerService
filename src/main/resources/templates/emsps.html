@@ -11,9 +11,13 @@
         <div class="card-header">New eMSP</div>
         <div class="card-body">
             <form th:action="@{/ui/emsps}" method="post" class="row g-2 align-items-end">
-                <div class="col-md-10">
+                <div class="col-md-6">
                     <label class="form-label">Name</label>
                     <input type="text" name="name" class="form-control" required/>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">External Id <small class="text-muted">(optional)</small></label>
+                    <input type="text" name="externalId" class="form-control" placeholder="EMSP-001"/>
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Add</button>
@@ -25,7 +29,8 @@
     <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
-            <th>Id</th>
+            <th>Id <small class="text-muted fw-normal">(internal)</small></th>
+            <th>External Id</th>
             <th>Name</th>
             <th class="text-end">Actions</th>
         </tr>
@@ -33,6 +38,10 @@
         <tbody>
         <tr th:each="emsp : ${emsps}">
             <td th:text="${emsp.id()}">id</td>
+            <td>
+                <span th:if="${emsp.externalId() != null}" th:text="${emsp.externalId()}">externalId</span>
+                <span th:if="${emsp.externalId() == null}" class="text-muted">&mdash;</span>
+            </td>
             <td th:text="${emsp.name()}">name</td>
             <td class="text-end">
                 <a th:href="@{'/ui/emsps/' + ${emsp.id()} + '/edit'}"
@@ -45,7 +54,7 @@
             </td>
         </tr>
         <tr th:if="${emsps.isEmpty()}">
-            <td colspan="3" class="text-center text-muted">No eMSP yet</td>
+            <td colspan="4" class="text-center text-muted">No eMSP yet</td>
         </tr>
         </tbody>
     </table>

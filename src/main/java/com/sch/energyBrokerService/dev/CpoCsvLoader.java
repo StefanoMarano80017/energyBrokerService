@@ -65,7 +65,7 @@ public class CpoCsvLoader {
                 double latitude = Double.parseDouble(cols[1].trim());
                 double longitude = Double.parseDouble(cols[2].trim());
 
-                cpoCommandHandler.create(new CreateCpoRequest(name, latitude, longitude));
+                cpoCommandHandler.create(new CreateCpoRequest(name, latitude, longitude, null));
                 created++;
             }
         } catch (Exception e) {

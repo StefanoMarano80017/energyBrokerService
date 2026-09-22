@@ -28,7 +28,7 @@ public class EmspPageController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("emsps", emspQueryHandler.search(null).stream()
+        model.addAttribute("emsps", emspQueryHandler.search(null, null).stream()
                 .map(EmspPersistenceMapper::toResponse)
                 .toList());
         return "emsps";

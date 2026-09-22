@@ -18,18 +18,38 @@ public class EmspQueryHandler {
 
     private final EmspRepository emspRepository;
 
-    public List<Emsp> search(String name) {
-        List<Emsp> all = emspRepository.findAll();
+    /**
+     * Ricerca con filtri opzionali. Con {@code externalId} valorizzato la lista contiene
+     * al più un elemento, perché l'identificativo esterno è univoco; il filtro sul nome
+     * resta applicabile in combinazione.
+     */
+    public List<Emsp> search(String name, String externalId) {
+        List<Emsp> candidates;
+        if (externalId != null && !externalId.isBlank()) {
+            candidates = emspRepository.findByExternalId(externalId.trim())
+                    .map(List::of)
+                    .orElseGet(List::of);
+        } else {
+            candidates = emspRepository.findAll();
+        }
+
         if (name == null || name.isBlank()) {
-            return all;
+            return candidates;
         }
         String needle = name.toLowerCase();
-        return all.stream()
+        return candidates.stream()
                 .filter(e -> e.name().toLowerCase().contains(needle))
                 .toList();
     }
 
     public Optional<Emsp> findById(UUID id) {
         return emspRepository.findById(new EmspId(id));
+    }
+
+    public Optional<Emsp> findByExternalId(String externalId) {
+        if (externalId == null || externalId.isBlank()) {
+            return Optional.empty();
+        }
+        return emspRepository.findByExternalId(externalId.trim());
     }
 }

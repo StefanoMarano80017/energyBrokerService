@@ -32,6 +32,11 @@ public class CpoRepositoryAdapter implements CpoRepository {
     }
 
     @Override
+    public Optional<Cpo> findByExternalId(String externalId) {
+        return jpaRepo.findByExternalId(externalId).map(CpoPersistenceMapper::toDomain);
+    }
+
+    @Override
     public List<Cpo> findAll() {
         return jpaRepo.findAll().stream().map(CpoPersistenceMapper::toDomain).toList();
     }

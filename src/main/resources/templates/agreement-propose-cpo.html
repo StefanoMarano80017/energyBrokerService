@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('CPO — Proposta accordo')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="mb-1">CPO — Proposta accordo</h1>
+    <p class="text-muted mb-4">
+        Attore corrente: <strong>CPO</strong> (proponente). Il CPO propone una tariffa a un eMSP;
+        l'accordo nasce in stato <span class="badge text-bg-warning">PROPOSED</span> e viene accettato
+        dall'eMSP dalla pagina <a href="/ui/emsp/agreements">eMSP — Accettazione accordo</a>.
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-header">New agreement proposal</div>
+        <div class="card-body">
+            <form th:action="@{/ui/cpo/agreements}" method="post" class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">CPO (proposing)</label>
+                    <select name="cpoId" class="form-select" required>
+                        <option value="">— select CPO —</option>
+                        <option th:each="cpo : ${cpos}"
+                                th:value="${cpo.id()}"
+                                th:selected="${cpo.id() == selectedCpoId}"
+                                th:text="${cpo.name()} + (${cpo.externalId()} != null ? ' · ext: ' + ${cpo.externalId()} : '')">cpo</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">eMSP (recipient)</label>
+                    <select name="emspId" class="form-select" required>
+                        <option value="">— select eMSP —</option>
+                        <option th:each="emsp : ${emsps}"
+                                th:value="${emsp.id()}"
+                                th:text="${emsp.name()} + (${emsp.externalId()} != null ? ' · ext: ' + ${emsp.externalId()} : '')">emsp</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Tariff type</label>
+                    <select name="tariff.type" class="form-select" required>
+                        <option th:each="type : ${tariffTypes}"
+                                th:value="${type}" th:text="${type}">type</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">&euro;/kWh</label>
+                    <input type="number" step="0.0001" min="0.0001" name="tariff.pricePerKwh"
+                           class="form-control" required/>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">Propose</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <form th:action="@{/ui/cpo/agreements}" method="get" class="row g-2 align-items-end mb-3">
+        <div class="col-md-5">
+            <label class="form-label">Show agreements proposed by</label>
+            <select name="cpoId" class="form-select" onchange="this.form.submit()">
+                <option value="">— all CPO —</option>
+                <option th:each="cpo : ${cpos}"
+                        th:value="${cpo.id()}"
+                        th:selected="${cpo.id() == selectedCpoId}"
+                        th:text="${cpo.name()} + (${cpo.externalId()} != null ? ' · ext: ' + ${cpo.externalId()} : '')">cpo</option>
+            </select>
+        </div>
+    </form>
+
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>eMSP</th>
+            <th>Tariff</th>
+            <th>Status</th>
+            <th>Created at</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${agreements}">
+            <td><small class="text-muted" th:text="${a.id()}">id</small></td>
+            <td th:with="emsp=${emspById.get(a.emspId())}">
+                <th:block th:replace="~{fragments/layout :: entityRef(${emsp}, ${a.emspId()})}"></th:block>
+            </td>
+            <td th:text="${a.tariff().type()} + ' &middot; ' + ${a.tariff().pricePerKwh()} + ' &euro;/kWh'">tariff</td>
+            <td>
+                <span class="badge"
+                      th:classappend="${a.status() == 'ACCEPTED'} ? 'text-bg-success' : (${a.status() == 'PROPOSED'} ? 'text-bg-warning' : 'text-bg-secondary')"
+                      th:text="${a.status()}">status</span>
+            </td>
+            <td th:text="${a.createdAt()}">createdAt</td>
+        </tr>
+        <tr th:if="${agreements.isEmpty()}">
+            <td colspan="5" class="text-center text-muted">No agreement proposed yet</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

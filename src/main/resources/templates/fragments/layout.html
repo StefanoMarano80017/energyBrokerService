@@ -18,9 +18,26 @@
             <a class="nav-link" href="/ui/emsps">eMSP</a>
             <a class="nav-link" href="/ui/agreements">Agreements</a>
             <a class="nav-link" href="/ui/agreements/pending">Pending</a>
+            <a class="nav-link" href="/ui/cpo/agreements">CPO · Propose</a>
+            <a class="nav-link" href="/ui/emsp/agreements">eMSP · Accept</a>
         </div>
     </div>
 </nav>
+
+<!--
+  Riferimento a un CPO/eMSP: nome + identificativo esterno (se presente) + identificativo
+  interno. Usato dalle pagine accordi, dove il dato disponibile è il solo UUID.
+-->
+<th:block th:fragment="entityRef(entity, rawId)">
+    <span th:if="${entity != null}">
+        <span th:text="${entity.name()}">name</span>
+        <span class="badge text-bg-light border" th:if="${entity.externalId() != null}"
+              th:text="'ext: ' + ${entity.externalId()}">ext</span>
+        <br/>
+        <small class="text-muted" th:text="${rawId}">uuid</small>
+    </span>
+    <span th:if="${entity == null}" class="text-muted" th:text="${rawId}">uuid</span>
+</th:block>
 
 </body>
 </html>

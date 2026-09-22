@@ -17,6 +17,14 @@ public record CreateCpoRequest(
 
         @NotNull(message = "Cpo longitude is required")
         @Schema(description = "Longitudine della posizione", example = "9.191383")
-        Double longitude
+        Double longitude,
+
+        @Schema(
+                description = "Identificativo assegnato dal sistema esterno. Opzionale; "
+                        + "se valorizzato deve essere univoco fra i CPO",
+                example = "CPO-001",
+                requiredMode = Schema.RequiredMode.NOT_REQUIRED
+        )
+        String externalId
 
 ) {}

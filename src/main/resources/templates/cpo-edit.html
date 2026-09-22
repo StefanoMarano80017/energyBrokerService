@@ -11,6 +11,13 @@
         <div class="mb-3">
             <label class="form-label">Id</label>
             <input type="text" class="form-control" th:value="${cpo.id()}" disabled/>
+            <div class="form-text">Identificativo interno all'Energy Broker, non modificabile.</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">External Id</label>
+            <input type="text" name="externalId" class="form-control"
+                   th:value="${cpo.externalId()}" placeholder="CPO-001"/>
+            <div class="form-text">Identificativo assegnato dal sistema esterno. Opzionale, univoco.</div>
         </div>
         <div class="mb-3">
             <label class="form-label">Name</label>

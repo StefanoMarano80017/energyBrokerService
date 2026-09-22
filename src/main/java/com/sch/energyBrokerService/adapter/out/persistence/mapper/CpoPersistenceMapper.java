@@ -12,6 +12,7 @@ public class CpoPersistenceMapper {
     public static CpoEntity toEntity(Cpo cpo) {
         return CpoEntity.builder()
                 .id(cpo.id().value())
+                .externalId(cpo.externalId())
                 .name(cpo.name())
                 .location(new CoordinateEmbeddable(
                         cpo.location().latitude(),
@@ -23,6 +24,7 @@ public class CpoPersistenceMapper {
     public static Cpo toDomain(CpoEntity entity) {
         return new Cpo(
                 new CpoId(entity.getId()),
+                entity.getExternalId(),
                 entity.getName(),
                 new Coordinate(
                         entity.getLocation().getLatitude(),
@@ -34,6 +36,7 @@ public class CpoPersistenceMapper {
     public static CpoResponse toResponse(Cpo cpo) {
         return new CpoResponse(
                 cpo.id().value(),
+                cpo.externalId(),
                 cpo.name(),
                 cpo.location().latitude(),
                 cpo.location().longitude()

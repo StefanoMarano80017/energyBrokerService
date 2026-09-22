@@ -8,6 +8,14 @@ public record CreateEmspRequest(
 
         @NotBlank(message = "Emsp name is required")
         @Schema(description = "Nome dell'eMSP", example = "Mobility Spa")
-        String name
+        String name,
+
+        @Schema(
+                description = "Identificativo assegnato dal sistema esterno. Opzionale; "
+                        + "se valorizzato deve essere univoco fra gli eMSP",
+                example = "EMSP-001",
+                requiredMode = Schema.RequiredMode.NOT_REQUIRED
+        )
+        String externalId
 
 ) {}

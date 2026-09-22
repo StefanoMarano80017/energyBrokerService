@@ -38,12 +38,12 @@ public class EmspLoader {
     private final EmspQueryHandler emspQueryHandler;
 
     public int load() {
-        if (!emspQueryHandler.search(null).isEmpty()) {
+        if (!emspQueryHandler.search(null, null).isEmpty()) {
             log.info("eMSP già presenti, skip inizializzazione");
             return 0;
         }
 
-        EMSP_NAMES.forEach(name -> emspCommandHandler.create(new CreateEmspRequest(name)));
+        EMSP_NAMES.forEach(name -> emspCommandHandler.create(new CreateEmspRequest(name, null)));
         log.info("Creati {} eMSP", EMSP_NAMES.size());
         return EMSP_NAMES.size();
     }

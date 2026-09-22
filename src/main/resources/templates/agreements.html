@@ -23,9 +23,13 @@
         <tbody>
         <tr th:each="a : ${agreements}">
             <td th:text="${a.id()}">id</td>
-            <td th:text="${a.cpoId()}">cpo</td>
-            <td th:text="${a.emspId()}">emsp</td>
-            <td th:text="${a.tariff().type()} + ' · ' + ${a.tariff().pricePerKwh()} + ' €/kWh'">tariff</td>
+            <td th:with="cpo=${cpoById.get(a.cpoId())}">
+                <th:block th:replace="~{fragments/layout :: entityRef(${cpo}, ${a.cpoId()})}"></th:block>
+            </td>
+            <td th:with="emsp=${emspById.get(a.emspId())}">
+                <th:block th:replace="~{fragments/layout :: entityRef(${emsp}, ${a.emspId()})}"></th:block>
+            </td>
+            <td th:text="${a.tariff().type()} + ' &middot; ' + ${a.tariff().pricePerKwh()} + ' &euro;/kWh'">tariff</td>
             <td>
                 <span class="badge"
                       th:classappend="${a.status() == 'ACCEPTED'} ? 'text-bg-success' : (${a.status() == 'PROPOSED'} ? 'text-bg-warning' : 'text-bg-secondary')"
@@ -48,7 +52,7 @@
                     <button type="submit" class="btn btn-sm btn-outline-secondary">Cancel</button>
                 </form>
                 <span th:if="${a.status() == 'REJECTED' or a.status() == 'CANCELLED'}"
-                      class="text-muted">—</span>
+                      class="text-muted">&mdash;</span>
             </td>
         </tr>
         <tr th:if="${agreements.isEmpty()}">

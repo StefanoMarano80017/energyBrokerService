@@ -13,4 +13,7 @@ public class EmspSearchQuery {
 
     @Schema(description = "filtro sul nome dell'eMSP", example = "Mobility Spa")
     private final String name;
+
+    @Schema(description = "Identificativo assegnato dal sistema esterno", example = "EMSP-001")
+    private final String externalId;
 }

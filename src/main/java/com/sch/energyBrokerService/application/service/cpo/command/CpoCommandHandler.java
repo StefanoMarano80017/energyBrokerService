@@ -22,8 +22,12 @@ public class CpoCommandHandler {
     private final CpoRepository cpoRepository;
 
     public Cpo create(CreateCpoRequest request) {
+        CpoId cpoId = CpoId.newId();
+        requireExternalIdAvailable(request.externalId(), cpoId);
+
         Cpo cpo = new Cpo(
-                CpoId.newId(),
+                cpoId,
+                request.externalId(),
                 request.name(),
                 new Coordinate(request.latitude(), request.longitude())
         );
@@ -34,9 +38,11 @@ public class CpoCommandHandler {
         CpoId cpoId = new CpoId(id);
         cpoRepository.findById(cpoId)
                 .orElseThrow(() -> new EntityNotFoundException("Cpo not found: " + id));
+        requireExternalIdAvailable(request.externalId(), cpoId);
 
         Cpo updated = new Cpo(
                 cpoId,
+                request.externalId(),
                 request.name(),
                 new Coordinate(request.latitude(), request.longitude())
         );
@@ -48,5 +54,21 @@ public class CpoCommandHandler {
         cpoRepository.findById(cpoId)
                 .orElseThrow(() -> new EntityNotFoundException("Cpo not found: " + id));
         cpoRepository.deleteById(cpoId);
+    }
+
+    /**
+     * L'externalId è opzionale ma univoco: verifica che non sia già assegnato a un altro CPO.
+     * {@code owner} è l'entità che lo sta rivendicando, esclusa dal controllo (caso update).
+     */
+    private void requireExternalIdAvailable(String externalId, CpoId owner) {
+        if (externalId == null || externalId.isBlank()) {
+            return;
+        }
+        cpoRepository.findByExternalId(externalId.trim()).ifPresent(existing -> {
+            if (!existing.id().equals(owner)) {
+                throw new IllegalArgumentException(
+                        "Cpo externalId already in use: " + externalId.trim());
+            }
+        });
     }
 }

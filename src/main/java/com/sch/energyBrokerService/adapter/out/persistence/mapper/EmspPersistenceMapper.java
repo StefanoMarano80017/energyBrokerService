@@ -10,6 +10,7 @@ public class EmspPersistenceMapper {
     public static EmspEntity toEntity(Emsp emsp) {
         return EmspEntity.builder()
                 .id(emsp.id().value())
+                .externalId(emsp.externalId())
                 .name(emsp.name())
                 .build();
     }
@@ -17,6 +18,7 @@ public class EmspPersistenceMapper {
     public static Emsp toDomain(EmspEntity entity) {
         return new Emsp(
                 new EmspId(entity.getId()),
+                entity.getExternalId(),
                 entity.getName()
         );
     }
@@ -24,6 +26,7 @@ public class EmspPersistenceMapper {
     public static EmspResponse toResponse(Emsp emsp) {
         return new EmspResponse(
                 emsp.id().value(),
+                emsp.externalId(),
                 emsp.name()
         );
     }

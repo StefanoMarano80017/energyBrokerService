@@ -21,9 +21,13 @@
         <tbody>
         <tr th:each="a : ${agreements}">
             <td th:text="${a.id()}">id</td>
-            <td th:text="${a.cpoId()}">cpo</td>
-            <td th:text="${a.emspId()}">emsp</td>
-            <td th:text="${a.tariff().type()} + ' · ' + ${a.tariff().pricePerKwh()} + ' €/kWh'">tariff</td>
+            <td th:with="cpo=${cpoById.get(a.cpoId())}">
+                <th:block th:replace="~{fragments/layout :: entityRef(${cpo}, ${a.cpoId()})}"></th:block>
+            </td>
+            <td th:with="emsp=${emspById.get(a.emspId())}">
+                <th:block th:replace="~{fragments/layout :: entityRef(${emsp}, ${a.emspId()})}"></th:block>
+            </td>
+            <td th:text="${a.tariff().type()} + ' &middot; ' + ${a.tariff().pricePerKwh()} + ' &euro;/kWh'">tariff</td>
             <td th:text="${a.createdAt()}">createdAt</td>
             <td class="text-end text-nowrap">
                 <form th:action="@{'/ui/agreements/' + ${a.id()} + '/accept'}" method="post" class="d-inline">

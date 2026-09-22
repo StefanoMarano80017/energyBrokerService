@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.sch.energyBrokerService.adapter.in.web.dto.Request.CpoSearchQuery;
 import com.sch.energyBrokerService.adapter.in.web.dto.Request.CreateCpoRequest;
 import com.sch.energyBrokerService.adapter.in.web.dto.Response.CpoResponse;
 import com.sch.energyBrokerService.adapter.out.persistence.mapper.CpoPersistenceMapper;
@@ -26,16 +27,16 @@ public class CpoController {
     private final CpoCommandHandler commandHandler;
     private final CpoQueryHandler queryHandler;
 
-    @Operation(summary = "Crea un nuovo CPO")
+    @Operation(summary = "Crea un nuovo CPO, opzionalmente con l'identificativo del sistema esterno")
     @PostMapping
     public CpoResponse create(@Valid @RequestBody CreateCpoRequest request) {
         return CpoPersistenceMapper.toResponse(commandHandler.create(request));
     }
 
-    @Operation(summary = "Elenca i CPO")
+    @Operation(summary = "Elenca i CPO, con filtro opzionale sull'identificativo esterno")
     @GetMapping
-    public List<CpoResponse> findAll() {
-        return queryHandler.findAll().stream()
+    public List<CpoResponse> search(@ModelAttribute CpoSearchQuery query) {
+        return queryHandler.search(query.getExternalId()).stream()
                 .map(CpoPersistenceMapper::toResponse)
                 .toList();
     }
