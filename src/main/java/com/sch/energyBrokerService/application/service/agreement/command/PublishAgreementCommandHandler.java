@@ -16,11 +16,13 @@ import com.sch.energyBrokerService.domain.model.tariff.Tariff;
 import com.sch.energyBrokerService.domain.model.tariff.TariffId;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Pubblicazione di un accordo: un CPO propone una tariffa a un eMSP.
  * Verifica l'esistenza di CPO ed eMSP, costruisce la tariffa e crea l'accordo in stato PROPOSED.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -48,6 +50,9 @@ public class PublishAgreementCommandHandler {
         );
 
         Agreement agreement = Agreement.propose(cpoId, emspId, tariff);
-        return agreementRepository.save(agreement);
+        agreement = agreementRepository.save(agreement);
+        log.info("Agreement {} pubblicato: cpo={}, emsp={}, tariff={}",
+                agreement.id().value(), cpoId.value(), emspId.value(), tariff.type());
+        return agreement;
     }
 }

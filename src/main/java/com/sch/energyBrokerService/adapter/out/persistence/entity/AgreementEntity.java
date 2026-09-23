@@ -34,4 +34,5 @@ public class AgreementEntity {
 
     private Instant createdAt;
     private Instant acceptedAt;
+    private Instant lastModifiedAt;
 }

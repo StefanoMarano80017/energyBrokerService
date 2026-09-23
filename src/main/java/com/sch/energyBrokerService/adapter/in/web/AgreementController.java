@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.sch.energyBrokerService.adapter.in.web.dto.Request.AgreementSearchQuery;
 import com.sch.energyBrokerService.adapter.in.web.dto.Request.CreateAgreementRequest;
+import com.sch.energyBrokerService.adapter.in.web.dto.Request.UpdateTariffRequest;
 import com.sch.energyBrokerService.adapter.in.web.dto.Response.AgreementResponse;
 import com.sch.energyBrokerService.adapter.out.persistence.mapper.AgreementPersistenceMapper;
 import com.sch.energyBrokerService.application.exception.EntityNotFoundException;
@@ -51,6 +52,14 @@ public class AgreementController {
     @PostMapping("/{id}/cancel")
     public AgreementResponse cancel(@PathVariable UUID id) {
         return AgreementPersistenceMapper.toResponse(lifecycleHandler.cancel(id));
+    }
+
+    @Operation (summary = "Aggiorna la tariffa dell'accordo")
+    @PostMapping("/{id}/update-tariff")
+    public AgreementResponse updateTariff(@PathVariable UUID id, @RequestBody @Valid UpdateTariffRequest request) {
+        return AgreementPersistenceMapper.toResponse(lifecycleHandler.updateTariff(
+            id, request.tariff().type(), request.tariff().pricePerKwh())
+        );
     }
 
     @Operation(summary = "Cerca gli accordi per CPO, eMSP e/o stato")

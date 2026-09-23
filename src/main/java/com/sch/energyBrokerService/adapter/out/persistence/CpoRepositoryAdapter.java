@@ -37,6 +37,11 @@ public class CpoRepositoryAdapter implements CpoRepository {
     }
 
     @Override
+    public List<Cpo> findByNameIgnoreCase(String name) {
+        return jpaRepo.findByNameIgnoreCase(name).stream().map(CpoPersistenceMapper::toDomain).toList();
+    }
+
+    @Override
     public List<Cpo> findAll() {
         return jpaRepo.findAll().stream().map(CpoPersistenceMapper::toDomain).toList();
     }

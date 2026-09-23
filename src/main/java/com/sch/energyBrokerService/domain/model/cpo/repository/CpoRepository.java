@@ -13,6 +13,9 @@ public interface CpoRepository {
     /** Lookup per identificativo assegnato dal sistema esterno (univoco quando valorizzato). */
     Optional<Cpo> findByExternalId(String externalId);
 
+    /** Lookup per nome senza distinzione fra maiuscole e minuscole (il nome non è univoco). */
+    List<Cpo> findByNameIgnoreCase(String name);
+
     List<Cpo> findAll();
     void deleteById(CpoId id);
 }

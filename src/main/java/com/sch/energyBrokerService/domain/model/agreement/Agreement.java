@@ -4,7 +4,9 @@ import java.time.Instant;
 
 import com.sch.energyBrokerService.domain.model.cpo.CpoId;
 import com.sch.energyBrokerService.domain.model.emsp.EmspId;
+import com.sch.energyBrokerService.domain.model.tariff.PricePerKwh;
 import com.sch.energyBrokerService.domain.model.tariff.Tariff;
+import com.sch.energyBrokerService.domain.model.tariff.TariffType;
 
 /**
  * Aggregate Root: accordo commerciale tra un CPO ed un eMSP avente per oggetto una {@link Tariff}.
@@ -23,10 +25,11 @@ public class Agreement {
     private final AgreementId id;
     private final CpoId cpoId;
     private final EmspId emspId;
-    private final Tariff tariff;
+    private Tariff tariff;
     private AgreementStatus status;
     private final Instant createdAt;
     private Instant acceptedAt;
+    private Instant lastModifiedAt;
 
     /**
      * Costruttore completo, usato per la ricostruzione dell'aggregato dal layer di persistenza.
@@ -38,7 +41,8 @@ public class Agreement {
         Tariff tariff,
         AgreementStatus status,
         Instant createdAt,
-        Instant acceptedAt
+        Instant acceptedAt,
+        Instant lastModifiedAt
     ) {
         if (id == null) {
             throw new IllegalArgumentException("AgreementId is required");
@@ -58,6 +62,7 @@ public class Agreement {
         if (createdAt == null) {
             throw new IllegalArgumentException("createdAt is required");
         }
+
         this.id = id;
         this.cpoId = cpoId;
         this.emspId = emspId;
@@ -65,6 +70,7 @@ public class Agreement {
         this.status = status;
         this.createdAt = createdAt;
         this.acceptedAt = acceptedAt;
+        this.lastModifiedAt = lastModifiedAt;
     }
 
     /**
@@ -78,7 +84,8 @@ public class Agreement {
             tariff,
             AgreementStatus.PROPOSED,
             Instant.now(),
-            null
+            null,
+            Instant.now()
         );
     }
 
@@ -86,11 +93,13 @@ public class Agreement {
         requireStatus(AgreementStatus.PROPOSED, "accept");
         this.status = AgreementStatus.ACCEPTED;
         this.acceptedAt = Instant.now();
+        this.lastModifiedAt = Instant.now();
     }
 
     public void reject() {
         requireStatus(AgreementStatus.PROPOSED, "reject");
         this.status = AgreementStatus.REJECTED;
+        this.lastModifiedAt = Instant.now();
     }
 
     public void cancel() {
@@ -99,6 +108,12 @@ public class Agreement {
                 "Cannot cancel an agreement in status " + status);
         }
         this.status = AgreementStatus.CANCELLED;
+        this.lastModifiedAt = Instant.now();
+    }
+
+    public void updateTariff(TariffType type, PricePerKwh pricePerKwh) {
+        this.tariff = new Tariff(tariff.id(), type, pricePerKwh);
+        this.lastModifiedAt = Instant.now();
     }
 
     private void requireStatus(AgreementStatus expected, String action) {
@@ -136,4 +151,9 @@ public class Agreement {
     public Instant acceptedAt() {
         return acceptedAt;
     }
+
+    public Instant lastModifiedAt() {
+        return lastModifiedAt;
+    }
+
 }

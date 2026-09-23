@@ -32,6 +32,7 @@ public class AgreementPersistenceMapper {
                 .status(domain.status())
                 .createdAt(domain.createdAt())
                 .acceptedAt(domain.acceptedAt())
+                .lastModifiedAt(domain.lastModifiedAt())
                 .build();
     }
 
@@ -51,7 +52,8 @@ public class AgreementPersistenceMapper {
                 tariff,
                 entity.getStatus(),
                 entity.getCreatedAt(),
-                entity.getAcceptedAt()
+                entity.getAcceptedAt(),
+                entity.getLastModifiedAt()
         );
     }
 
@@ -70,7 +72,8 @@ public class AgreementPersistenceMapper {
                 tariffView,
                 domain.status().toString(),
                 domain.createdAt(),
-                domain.acceptedAt()
+                domain.acceptedAt(),
+                domain.lastModifiedAt()
         );
     }
 }

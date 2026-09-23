@@ -114,7 +114,8 @@ class AgreementPageControllerTest {
                 new Tariff(TariffId.newId(), TariffType.FLAT, new PricePerKwh(new BigDecimal("0.42"))),
                 AgreementStatus.PROPOSED,
                 Instant.parse("2026-01-01T10:00:00Z"),
-                null
+                null,
+                Instant.parse("2026-01-01T10:00:00Z")
         );
     }
 }

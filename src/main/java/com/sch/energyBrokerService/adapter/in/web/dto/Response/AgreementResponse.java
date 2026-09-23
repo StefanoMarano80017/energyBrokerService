@@ -12,6 +12,7 @@ public record AgreementResponse(
         @Schema(description = "UUID eMSP destinatario")                        UUID emspId,
         @Schema(description = "Tariffa oggetto dell'accordo")                  TariffView tariff,
         @Schema(description = "Stato", example = "PROPOSED")                   String status,
-        @Schema(description = "Data di creazione")                            Instant createdAt,
-        @Schema(description = "Data di accettazione (null se non accettato)") Instant acceptedAt
+        @Schema(description = "Data di creazione")                             Instant createdAt,
+        @Schema(description = "Data di accettazione (null se non accettato)")  Instant acceptedAt,
+        @Schema(description = "Data di modifica (null se non modificato)")     Instant lastModifiedAt
 ) {}
