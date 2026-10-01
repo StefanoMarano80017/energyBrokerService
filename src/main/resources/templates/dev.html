@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dev data')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container">
+    <h1 class="mb-4">Development data</h1>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-success">
+                <div class="card-body">
+                    <h2 class="h5">Initialize data</h2>
+                    <p class="text-muted">Load CPO and eMSP data from the CSV files and generate agreements.</p>
+                    <form method="post" action="/ui/dev/init">
+                        <button class="btn btn-success" type="submit">Init</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card h-100 border-danger">
+                <div class="card-body">
+                    <h2 class="h5">Reset data</h2>
+                    <p class="text-muted">Delete all agreements, CPO and eMSP data.</p>
+                    <form method="post" action="/ui/dev/reset">
+                        <button class="btn btn-danger" type="submit">Reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section th:if="${operation != null}" class="alert alert-info">
+        <h2 class="h5" th:text="${operation}">Operation completed</h2>
+        <ul class="mb-0">
+            <li th:each="entry : ${summary}" th:text="${entry.key + ': ' + entry.value}">cpos: 0</li>
+        </ul>
+    </section>
+</main>
+</body>
+</html>

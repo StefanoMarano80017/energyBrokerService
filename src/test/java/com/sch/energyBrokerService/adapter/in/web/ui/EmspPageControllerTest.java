@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,6 +30,7 @@ import com.sch.energyBrokerService.domain.model.emsp.Emsp;
 import com.sch.energyBrokerService.domain.model.emsp.EmspId;
 
 @WebMvcTest(EmspPageController.class)
+@ActiveProfiles("dev")
 class EmspPageControllerTest {
 
     private final EmspId emspId = EmspId.newId();

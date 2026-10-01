@@ -2,6 +2,7 @@ package com.sch.energyBrokerService.adapter.in.web.ui;
 
 import java.util.UUID;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.sch.energyBrokerService.application.service.emsp.query.EmspQueryHandl
 import lombok.RequiredArgsConstructor;
 
 @Controller
+@Profile("dev")
 @RequestMapping("/ui/emsps")
 @RequiredArgsConstructor
 public class EmspPageController {

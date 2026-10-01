@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
  * transizione di stato. La proposta NON è disponibile qui: è di competenza del CPO.
  */
 @Controller
+@Profile("dev")
 @RequestMapping("/ui/emsp/agreements")
 @RequiredArgsConstructor
 public class EmspAgreementPageController {

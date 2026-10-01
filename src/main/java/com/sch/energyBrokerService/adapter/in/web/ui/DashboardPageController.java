@@ -1,5 +1,6 @@
 package com.sch.energyBrokerService.adapter.in.web.ui;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
  * Riusa i query handler applicativi, nessuna logica di business duplicata.
  */
 @Controller
+@Profile("dev")
 @RequiredArgsConstructor
 public class DashboardPageController {
 

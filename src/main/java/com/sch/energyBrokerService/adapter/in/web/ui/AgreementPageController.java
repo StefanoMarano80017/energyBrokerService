@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import com.sch.energyBrokerService.domain.model.agreement.AgreementStatus;
 import lombok.RequiredArgsConstructor;
 
 @Controller
+@Profile("dev")
 @RequestMapping("/ui/agreements")
 @RequiredArgsConstructor
 public class AgreementPageController {

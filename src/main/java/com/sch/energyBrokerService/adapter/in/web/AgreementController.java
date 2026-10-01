@@ -30,31 +30,36 @@ public class AgreementController {
     private final AgreementLifecycleCommandHandler lifecycleHandler;
     private final AgreementQueryHandler queryHandler;
 
-    @Operation(summary = "Pubblica un accordo: un CPO propone una tariffa a un eMSP (stato PROPOSED)")
+    /**
+    *  =========================================================
+    *  POST ENDPOINTS
+    *  =========================================================
+    */
+    @Operation(summary = "Pubblica un accordo: un eMSP propone una tariffa a un CPO (stato PROPOSED)")
     @PostMapping
     public AgreementResponse publish(@Valid @RequestBody CreateAgreementRequest request) {
         return AgreementPersistenceMapper.toResponse(publishHandler.handle(request));
     }
 
-    @Operation(summary = "L'eMSP accetta l'accordo (stato ACCEPTED)")
+    @Operation(summary = "L'CPO accetta l'accordo (stato ACCEPTED)")
     @PostMapping("/{id}/accept")
     public AgreementResponse accept(@PathVariable UUID id) {
         return AgreementPersistenceMapper.toResponse(lifecycleHandler.accept(id));
     }
 
-    @Operation(summary = "L'eMSP rifiuta l'accordo (stato REJECTED)")
+    @Operation(summary = "L'CPO rifiuta l'accordo (stato REJECTED)")
     @PostMapping("/{id}/reject")
     public AgreementResponse reject(@PathVariable UUID id) {
         return AgreementPersistenceMapper.toResponse(lifecycleHandler.reject(id));
     }
 
-    @Operation(summary = "Annulla l'accordo (stato CANCELLED)")
+    @Operation(summary = "CPO Annulla l'accordo (stato CANCELLED)")
     @PostMapping("/{id}/cancel")
     public AgreementResponse cancel(@PathVariable UUID id) {
         return AgreementPersistenceMapper.toResponse(lifecycleHandler.cancel(id));
     }
 
-    @Operation (summary = "Aggiorna la tariffa dell'accordo")
+    @Operation (summary = "CPO Aggiorna la tariffa dell'accordo")
     @PostMapping("/{id}/update-tariff")
     public AgreementResponse updateTariff(@PathVariable UUID id, @RequestBody @Valid UpdateTariffRequest request) {
         return AgreementPersistenceMapper.toResponse(lifecycleHandler.updateTariff(
@@ -62,10 +67,17 @@ public class AgreementController {
         );
     }
 
+    /**
+    *  =========================================================
+    *  GET ENDPOINTS
+    *  =========================================================
+    */
     @Operation(summary = "Cerca gli accordi per CPO, eMSP e/o stato")
     @GetMapping
     public List<AgreementResponse> search(@ModelAttribute AgreementSearchQuery query) {
-        return queryHandler.search(query.getCpoId(), query.getEmspId(), query.getStatus()).stream()
+        return queryHandler
+                .search(query.getCpoId(), query.getEmspId(), query.getStatus())
+                .stream()
                 .map(AgreementPersistenceMapper::toResponse)
                 .toList();
     }
@@ -73,7 +85,8 @@ public class AgreementController {
     @Operation(summary = "Recupera un accordo per id")
     @GetMapping("/{id}")
     public AgreementResponse getById(@PathVariable UUID id) {
-        return queryHandler.findById(id)
+        return queryHandler
+                .findById(id)
                 .map(AgreementPersistenceMapper::toResponse)
                 .orElseThrow(() -> new EntityNotFoundException("Agreement not found: " + id));
     }

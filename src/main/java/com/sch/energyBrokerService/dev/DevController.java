@@ -23,13 +23,13 @@ public class DevController {
 
     private final DataInitializer dataInitializer;
 
-    @Operation(summary = "Carica CPO da CSV, eMSP e genera accordi (idempotente)")
+    @Operation(summary = "Carica CPO ed eMSP dai CSV e genera accordi (idempotente)")
     @PostMapping("/init")
     public Map<String, Integer> init() {
         return dataInitializer.init();
     }
 
-    @Operation(summary = "Svuota i repository e ricarica i dati demo da zero")
+    @Operation(summary = "Svuota tutti i dati di sviluppo")
     @PostMapping("/reset")
     public Map<String, Integer> reset() {
         return dataInitializer.reset();

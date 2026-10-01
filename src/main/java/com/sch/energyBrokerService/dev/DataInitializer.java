@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Orchestratore dei dati di sviluppo. Solo profilo dev.
  *
- * <p>init(): carica CPO (CSV), eMSP e genera accordi (i loader sono idempotenti).
- * reset(): svuota i repository e ricarica tutto da zero.
+ * <p>init(): carica CPO ed eMSP dai CSV e genera accordi (i loader sono idempotenti).
+ * reset(): svuota i repository senza ricaricare dati.
  */
 @Component
 @Profile("dev")
@@ -49,6 +49,11 @@ public class DataInitializer {
         jpaAgreementRepository.deleteAllInBatch();
         jpaCpoRepository.deleteAllInBatch();
         jpaEmspRepository.deleteAllInBatch();
-        return init();
+
+        Map<String, Integer> summary = new LinkedHashMap<>();
+        summary.put("cpos", 0);
+        summary.put("emsps", 0);
+        summary.put("agreements", 0);
+        return summary;
     }
 }
