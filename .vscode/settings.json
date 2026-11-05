@@ -1,0 +1,10 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "coverage-gutters.watchOnActivate": true,
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.showGutterCoverage": true,
+    "[java]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true
+    }
+}

@@ -21,6 +21,9 @@ public class Cpo {
     private final Coordinate location;
 
     public Cpo(CpoId id, String externalId, String name, Coordinate location) {
+        if (id == null) {
+            throw new IllegalArgumentException("Cpo id is required");
+        }
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Cpo name is required");
         }

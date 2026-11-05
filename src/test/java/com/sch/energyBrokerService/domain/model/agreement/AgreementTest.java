@@ -74,4 +74,76 @@ class AgreementTest {
 
         assertThatThrownBy(agreement::accept).isInstanceOf(IllegalStateException.class);
     }
+
+    @Test
+    void aProposedAgreementCanBeCancelled() {
+        Agreement agreement = proposed();
+
+        agreement.cancel();
+
+        assertThat(agreement.status()).isEqualTo(AgreementStatus.CANCELLED);
+        assertThat(agreement.lastModifiedAt()).isNotNull();
+    }
+
+    @Test
+    void anAcceptedAgreementCanAlsoBeCancelled() {
+        Agreement agreement = proposed();
+        agreement.accept();
+
+        agreement.cancel();
+
+        assertThat(agreement.status()).isEqualTo(AgreementStatus.CANCELLED);
+    }
+
+    @Test
+    void aRejectedAgreementCannotBeCancelled() {
+        Agreement agreement = proposed();
+        agreement.reject();
+
+        assertThatThrownBy(agreement::cancel)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Cannot cancel");
+    }
+
+    @Test
+    void updateTariffReplacesTheTariffTypeAndPrice() {
+        Agreement agreement = proposed();
+        Tariff originalTariff = agreement.tariff();
+
+        agreement.updateTariff(TariffType.TIME_BASED, new PricePerKwh(new BigDecimal("0.58")));
+
+        assertThat(agreement.tariff().id()).isEqualTo(originalTariff.id());
+        assertThat(agreement.tariff().type()).isEqualTo(TariffType.TIME_BASED);
+        assertThat(agreement.tariff().pricePerKwh().amount()).isEqualByComparingTo(new BigDecimal("0.5800"));
+        assertThat(agreement.lastModifiedAt()).isNotNull();
+    }
+
+    @Test
+    void constructorRejectsMissingMandatoryAgreementData() {
+        Tariff tariff = new Tariff(TariffId.newId(), TariffType.FLAT, new PricePerKwh(new BigDecimal("0.42")));
+
+        assertThatThrownBy(() -> new Agreement(null, CpoId.newId(), EmspId.newId(), tariff, AgreementStatus.PROPOSED, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("AgreementId");
+
+        assertThatThrownBy(() -> new Agreement(AgreementId.newId(), null, EmspId.newId(), tariff, AgreementStatus.PROPOSED, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("CpoId");
+
+        assertThatThrownBy(() -> new Agreement(AgreementId.newId(), CpoId.newId(), null, tariff, AgreementStatus.PROPOSED, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("EmspId");
+
+        assertThatThrownBy(() -> new Agreement(AgreementId.newId(), CpoId.newId(), EmspId.newId(), null, AgreementStatus.PROPOSED, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Tariff");
+
+        assertThatThrownBy(() -> new Agreement(AgreementId.newId(), CpoId.newId(), EmspId.newId(), tariff, null, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("AgreementStatus");
+
+        assertThatThrownBy(() -> new Agreement(AgreementId.newId(), CpoId.newId(), EmspId.newId(), tariff, AgreementStatus.PROPOSED, null, null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("createdAt");
+    }
 }

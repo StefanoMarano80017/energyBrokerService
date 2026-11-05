@@ -1,12 +1,11 @@
 package com.sch.energyBrokerService.domain.model.tariff.pricing;
 
+import com.sch.energyBrokerService.domain.model.tariff.Tariff;
+import com.sch.energyBrokerService.domain.model.tariff.TariffType;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-
-import com.sch.energyBrokerService.domain.model.tariff.Tariff;
-import com.sch.energyBrokerService.domain.model.tariff.TariffType;
 
 /**
  * Seleziona la {@link TariffPricingStrategy} in base al {@link TariffType} della tariffa
@@ -21,8 +20,13 @@ public class TariffPriceCalculator {
             TariffPricingStrategy previous = this.strategies.put(strategy.supportedType(), strategy);
             if (previous != null) {
                 throw new IllegalStateException(
-                    "Multiple pricing strategies for tariff type " + strategy.supportedType() + ": "
-                    + previous.getClass().getSimpleName() + ", " + strategy.getClass().getSimpleName());
+                    "Multiple pricing strategies for tariff type " +
+                        strategy.supportedType() +
+                        ": " +
+                        previous.getClass().getSimpleName() +
+                        ", " +
+                        strategy.getClass().getSimpleName()
+                );
             }
         }
     }

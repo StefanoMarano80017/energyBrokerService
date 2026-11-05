@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -131,5 +132,17 @@ class CpoControllerTest {
         mockMvc.perform(get("/cpos/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.externalId").value("CPO-001"));
+    }
+
+    @Test
+    void returnsNotFoundWhenFetchingAnUnknownCpo() throws Exception {
+        UUID id = UUID.randomUUID();
+        given(queryHandler.findById(id)).willReturn(java.util.Optional.empty());
+
+        mockMvc.perform(get("/cpos/{id}", id))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Cpo not found: " + id));
+
+        verify(queryHandler).findById(id);
     }
 }

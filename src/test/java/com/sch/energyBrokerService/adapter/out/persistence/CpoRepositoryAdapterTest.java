@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
+
 import com.sch.energyBrokerService.domain.model.cpo.Cpo;
 import com.sch.energyBrokerService.domain.model.cpo.CpoId;
 import com.sch.energyBrokerService.domain.model.geo.Coordinate;
@@ -53,6 +55,37 @@ class CpoRepositoryAdapterTest {
         entityManager.flush();
 
         assertThat(adapter.findAll()).hasSize(2);
+    }
+
+    @Test
+    void findsAllCposWithANameIgnoringCase() {
+        Cpo first = adapter.save(new Cpo(CpoId.newId(), null, "Charge Spa", MILAN));
+        Cpo second = adapter.save(new Cpo(CpoId.newId(), null, "Charge Spa", MILAN));
+        adapter.save(new Cpo(CpoId.newId(), null, "Power Srl", MILAN));
+        entityManager.flush();
+
+        List<Cpo> matches = adapter.findByNameIgnoreCase("cHaRgE sPa");
+
+        assertThat(matches).extracting(Cpo::id).containsExactlyInAnyOrder(first.id(), second.id());
+    }
+
+    @Test
+    void returnsNoCposWhenNoNameMatches() {
+        adapter.save(new Cpo(CpoId.newId(), null, "Charge Spa", MILAN));
+
+        assertThat(adapter.findByNameIgnoreCase("Unknown")).isEmpty();
+    }
+
+    @Test
+    void deletesACpoById() {
+        Cpo saved = adapter.save(new Cpo(CpoId.newId(), null, "Charge Spa", MILAN));
+        entityManager.flush();
+
+        adapter.deleteById(saved.id());
+        entityManager.flush();
+        entityManager.clear();
+
+        assertThat(adapter.findById(saved.id())).isEmpty();
     }
 
     @Test

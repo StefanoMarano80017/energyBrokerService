@@ -4,12 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -106,5 +109,32 @@ class EmspControllerTest {
         mockMvc.perform(get("/emsps").param("name", "Mobility"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
+    }
+
+    @Test
+    void returnsAnEmspWhenFetchingById() throws Exception {
+        UUID id = UUID.randomUUID();
+        given(queryHandler.findById(id))
+                .willReturn(Optional.of(new Emsp(new EmspId(id), "EMSP-001", "Mobility Spa")));
+
+        mockMvc.perform(get("/emsps/{id}", id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id.toString()))
+                .andExpect(jsonPath("$.externalId").value("EMSP-001"))
+                .andExpect(jsonPath("$.name").value("Mobility Spa"));
+
+        verify(queryHandler).findById(id);
+    }
+
+    @Test
+    void returnsNotFoundWhenFetchingAnUnknownEmsp() throws Exception {
+        UUID id = UUID.randomUUID();
+        given(queryHandler.findById(id)).willReturn(Optional.empty());
+
+        mockMvc.perform(get("/emsps/{id}", id))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("Emsp not found: " + id));
+
+        verify(queryHandler).findById(id);
     }
 }

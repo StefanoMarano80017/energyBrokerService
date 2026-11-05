@@ -43,6 +43,18 @@ class EmspRepositoryAdapterTest {
     }
 
     @Test
+    void deletesAnEmspById() {
+        Emsp saved = adapter.save(new Emsp(EmspId.newId(), null, "Mobility Spa"));
+        entityManager.flush();
+
+        adapter.deleteById(saved.id());
+        entityManager.flush();
+        entityManager.clear();
+
+        assertThat(adapter.findById(saved.id())).isEmpty();
+    }
+
+    @Test
     void enforcesTheUniquenessOfTheExternalId() {
         adapter.save(new Emsp(EmspId.newId(), "EMSP-001", "Mobility Spa"));
         entityManager.flush();
